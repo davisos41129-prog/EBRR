@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111214">
+  <title>SCRIPT HUB</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Importação obrigatória do Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <div class="brand-mark">SH</div>
+      <p class="eyebrow">CENTRAL DE COMANDOS</p>
+      <h1>SCRIPT <span>HUB</span></h1>
+      <p class="muted" id="auth-subtitle">Entre com seu nickname e senha para acessar seus scripts.</p>
+
+      <!-- Seletor de Modo: Login ou Criar Conta -->
+      <div style="display:flex; gap:8px; margin: 16px 0;">
+        <button type="button" id="tab-login" class="btn primary" style="flex:1; justify-content:center;">Entrar</button>
+        <button type="button" id="tab-register" class="btn ghost" style="flex:1; justify-content:center;">Criar Conta</button>
+      </div>
+
+      <!-- Formulário de Login -->
+      <form id="login-form">
+        <label for="login-nickname">Nickname do Roblox</label>
+        <input id="login-nickname" maxlength="24" autocomplete="username" placeholder="Seu nickname" required>
+        
+        <label for="login-password">Senha do Script Hub</label>
+        <input id="login-password" type="password" maxlength="40" autocomplete="current-password" placeholder="Sua senha" required>
+        
+        <button class="btn primary full" type="submit">Entrar no sistema <span>→</span></button>
+      </form>
+
+      <!-- Formulário de Cadastro (Oculto inicialmente) -->
+      <form id="register-form" class="hidden">
+        <label for="reg-nickname">Escolha um Nickname</label>
+        <input id="reg-nickname" maxlength="24" autocomplete="username" placeholder="Ex.: Cabo_Silva" required>
+        
+        <label for="reg-password">Crie uma Senha</label>
+        <input id="reg-password" type="password" maxlength="40" autocomplete="new-password" placeholder="Mínimo 4 caracteres" required>
+        
+        <label for="reg-confirm">Confirme a Senha</label>
+        <input id="reg-confirm" type="password" maxlength="40" autocomplete="new-password" placeholder="Repita a senha" required>
+        
+        <button class="btn primary full" type="submit">Criar conta e entrar <span>＋</span></button>
+      </form>
+
+      <p class="tiny-note" style="margin-top:14px;">Aviso: Nunca utilize a mesma senha da sua conta oficial do Roblox.</p>
+    </div>
+  </div>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar">
+      <a class="brand" href="#" data-page="inicio"><span class="brand-mark small">SH</span><span>SCRIPT <b>HUB</b></span></a>
+      <div class="side-label">MENU PRINCIPAL</div>
+      <nav id="main-nav">
+        <button class="nav-item active" data-page="inicio"><span>⌂</span> Início</button>
+        <button class="nav-item" data-page="eb"><span>✦</span> Exército Brasileiro</button>
+        <button class="nav-item" data-page="rr"><span>◆</span> Regimento Rebelde</button>
+        <button class="nav-item" data-page="personalizada"><span>＋</span> Personalizada</button>
+        <button class="nav-item" data-page="favoritos"><span>☆</span> Favoritos</button>
+        <button class="nav-item" data-page="cronometro"><span>◷</span> Cronômetro</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="nav-item" data-page="configuracoes"><span>⚙</span> Configurações</button>
+        <button class="nav-item logout" id="logout-btn"><span>↪</span> Sair</button>
+        <div class="user-mini"><div class="avatar" id="avatar">U</div><div><b id="side-nickname">Usuário</b><small>Operador</small></div></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><p class="eyebrow" id="top-eyebrow">PAINEL DE CONTROLE</p><h2 id="page-title">Início</h2></div>
+        <div class="top-actions"><span class="status-dot"></span><span class="muted small-text">Conectado à Nuvem</span><button class="icon-btn" data-page="configuracoes" title="Configurações">⚙</button></div>
+      </header>
+
+      <section id="page-inicio" class="page active">
+        <div class="welcome-panel">
+          <div><p class="eyebrow">BEM-VINDO AO SCRIPT HUB</p><h1>Pronto para a próxima <span>operação?</span></h1><p class="muted">Organize suas falas, encontre comandos rapidamente e mantenha tudo à mão.</p></div>
+          <div class="welcome-symbol">SH<span> //</span></div>
+        </div>
+        <div class="section-heading"><div><p class="eyebrow">ACESSO RÁPIDO</p><h3>Suas áreas</h3></div></div>
+        <div class="quick-grid">
+          <button class="quick-card" data-page="eb"><span class="quick-icon">✦</span><b>Exército Brasileiro</b><small>Scripts e falas do EB</small><span class="card-arrow">↗</span></button>
+          <button class="quick-card" data-page="rr"><span class="quick-icon">◆</span><b>Regimento Rebelde</b><small>Scripts e falas do RR</small><span class="card-arrow">↗</span></button>
+          <button class="quick-card" data-page="personalizada"><span class="quick-icon">＋</span><b>Personalizada</b><small>Crie seu próprio conteúdo</small><span class="card-arrow">↗</span></button>
+          <button class="quick-card" data-page="cronometro"><span class="quick-icon">◷</span><b>Cronômetro</b><small>Controle o tempo</small><span class="card-arrow">↗</span></button>
+        </div>
+        <div class="section-heading"><div><p class="eyebrow">FERRAMENTAS</p><h3>Pesquisa rápida</h3></div></div>
+        <div class="search-wrap"><span>⌕</span><input id="global-search" placeholder="Pesquise uma frase ou palavra em todos os scripts..."><kbd>ENTER</kbd></div>
+        <div id="search-results" class="script-list"></div>
+      </section>
+
+      <section id="page-eb" class="page">
+        <div class="page-intro"><p class="eyebrow">BIBLIOTECA DE SCRIPTS</p><h1>Exército <span>Brasileiro</span></h1><p class="muted">Organize e consulte suas falas de roleplay.</p></div>
+        <div class="toolbar"><input class="section-search" data-search="eb" placeholder="Pesquisar nesta área..."><button class="btn ghost" data-copy-section="eb">Copiar tudo</button></div>
+        <div id="eb-content" class="category-layout"></div>
+        <div id="eb-tables-content" class="tables-area"></div>
+      </section>
+
+      <section id="page-rr" class="page">
+        <div class="page-intro"><p class="eyebrow">BIBLIOTECA DE SCRIPTS</p><h1>Regimento <span>Rebelde</span></h1><p class="muted">Seus scripts e comandos de roleplay em um só lugar.</p></div>
+        <div class="toolbar"><input class="section-search" data-search="rr" placeholder="Pesquisar nesta área..."><button class="btn ghost" data-copy-section="rr">Copiar tudo</button></div>
+        <div id="rr-content" class="category-layout"></div>
+        <div id="rr-tables-content" class="tables-area"></div>
+      </section>
+
+      <section id="page-personalizada" class="page">
+        <div class="page-intro"><p class="eyebrow">SEU ESPAÇO</p><h1>Área <span>personalizada</span></h1><p class="muted">Crie categorias, subcategorias e frases do seu jeito.</p></div>
+        <div class="toolbar"><button class="btn primary" id="add-category">＋ Nova categoria</button><button class="btn ghost" id="copy-custom-all">Copiar tudo</button></div>
+        <div id="custom-content" class="category-layout"></div>
+        <div id="custom-tables-content" class="tables-area"></div>
+      </section>
+
+      <section id="page-favoritos" class="page">
+        <div class="page-intro"><p class="eyebrow">ACESSO RÁPIDO</p><h1>Seus <span>favoritos</span></h1><p class="muted">Frases marcadas para encontrar depois.</p></div>
+        <div id="favorites-content" class="script-list"></div>
+      </section>
+
+      <section id="page-cronometro" class="page">
+        <div class="page-intro"><p class="eyebrow">FERRAMENTA</p><h1>Controle de <span>tempo</span></h1><p class="muted">Configure uma contagem regressiva para suas atividades.</p></div>
+        <div class="timer-card">
+          <p class="eyebrow">CONTAGEM REGRESSIVA</p>
+          <div id="timer-display" class="timer-display">05:00</div>
+          <div class="timer-inputs"><label>Minutos<input id="timer-minutes" type="number" min="0" max="999" value="5"></label><label>Segundos<input id="timer-seconds" type="number" min="0" max="59" value="0"></label></div>
+          <div class="timer-actions"><button class="btn primary" id="timer-start">Iniciar</button><button class="btn ghost" id="timer-pause">Pausar</button><button class="btn ghost" id="timer-reset">Reiniciar</button></div>
+          <p id="timer-message" class="muted small-text">Defina o tempo e pressione iniciar.</p>
+        </div>
+      </section>
+
+      <section id="page-configuracoes" class="page">
+        <div class="page-intro"><p class="eyebrow">PREFERÊNCIAS</p><h1>Configurações</h1><p class="muted">Personalize como o sistema apresenta suas falas.</p></div>
+        <div class="settings-card">
+          <form id="settings-form">
+            <label for="display-name">Como deseja ser chamado?</label><input id="display-name" maxlength="32" placeholder="Ex.: Cabo, Insurgente Matriz...">
+            <label for="pronoun">Pronome</label><select id="pronoun"><option value="ele/dele">Ele/dele</option><option value="ela/dela">Ela/dela</option><option value="elu/delu">Elu/delu</option><option value="custom">Personalizado</option></select>
+            <div id="custom-pronoun-group"><label for="custom-pronoun">Pronome personalizado (opcional)</label><input id="custom-pronoun" maxlength="30" placeholder="Ex.: ile/dile"></div>
+            <label for="treatment">Forma de tratamento</label><input id="treatment" maxlength="40" placeholder="Ex.: Cabo, Sargento, Insurgente Matriz">
+            <p class="muted small-text">Essa forma será usada nas falas do EB e do RR. Se deixar em branco, cada área mantém seu tratamento padrão.</p>
+            <button class="btn primary" type="submit">Salvar preferências</button>
+          </form>
+
+          <div class="divider"></div>
+          <h3>Restaurar Padrões</h3>
+          <p class="muted small-text">Caso queira voltar às falas originais do sistema nas áreas de script.</p>
+          <div style="display:flex; gap:10px; margin-top:12px;">
+            <button type="button" class="btn ghost" id="reset-eb">Restaurar EB</button>
+            <button type="button" class="btn ghost" id="reset-rr">Restaurar RR</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card"><div class="modal-head"><h3 id="modal-title">Adicionar</h3><button class="icon-btn" id="modal-close">×</button></div><form id="modal-form"><div id="modal-fields"></div><div class="modal-actions"><button type="button" class="btn ghost" id="modal-cancel">Cancelar</button><button type="submit" class="btn primary">Salvar</button></div></form></div>
+  </div>
+  <div id="toast" class="toast"></div>
+</body>
+</html>
